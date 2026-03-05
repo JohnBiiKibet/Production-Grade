@@ -1,11 +1,32 @@
----
-title: Infrastructure MLOps
-emoji: 🏗️
-colorFrom: blue
-colorTo: green
-sdk: gradio
-sdk_version: 4.44.1
-python_version: "3.11"
-app_file: app.py
-pinned: false
----
+name: CI/CD Sync to Hugging Face
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest
+      - name: Run Validation Tests
+        run: pytest tests/test_app.py
+
+  deploy:
+    needs: test  # Only deploy if tests pass!
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Push to HF
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: git push --force https://johnboscokibet:$HF_TOKEN@huggingface.co/spaces/johnboscokibet/infrastructure-mlops-pro main

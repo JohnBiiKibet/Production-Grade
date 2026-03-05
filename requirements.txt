@@ -3,3 +3,4 @@ ultralytics
 opencv-python-headless
 pydantic==2.10.6
 psutil
+Pillow

@@ -10,5 +10,7 @@ app_file: app.py
 pinned: false
 ---
 
-# Infrastructure MLOps
+# Infrastructure MLOps Pipeline
+Proof of Concept: Computer Vision + RAG for Mobility & Infrastructure.
+
 Check out the configuration reference at https://huggingface.co

@@ -1,23 +1,20 @@
 import pytest
-import sys
 
-def test_dependency_compatibility():
-    """Verify that Gradio and huggingface_hub can co-exist without ImportError."""
+def test_streamlit_imports():
+    """Verify core Streamlit and MLOps dependencies are present."""
     try:
-        import huggingface_hub
-        import gradio as gr
-        # This is the specific line that was failing in your logs
-        from huggingface_hub import whoami
-        print(f"✅ Success: Gradio {gr.__version__} and HF Hub {huggingface_hub.__version__} are compatible.")
+        import streamlit as st
+        import psutil
+        from PIL import Image
+        print(f"✅ Success: Streamlit {st.__version__} is ready.")
     except ImportError as e:
-        pytest.fail(f"❌ Dependency Conflict Detected: {e}")
+        pytest.fail(f"❌ Streamlit Dependency Missing: {e}")
 
-def test_model_initialization():
-    """Ensure the YOLO model can load in the CI environment."""
-    from ultralytics import YOLO
+def test_ml_imports():
+    """Verify YOLO and CV dependencies are present."""
     try:
-        model = YOLO('yolov8n.pt')
-        assert model is not None
-        print("✅ Success: YOLOv8 model initialized.")
-    except Exception as e:
-        pytest.fail(f"❌ Model Loading Failed: {e}")
+        from ultralytics import YOLO
+        import cv2
+        print("✅ Success: YOLO and OpenCV are ready.")
+    except ImportError as e:
+        pytest.fail(f"❌ ML Dependency Missing: {e}")

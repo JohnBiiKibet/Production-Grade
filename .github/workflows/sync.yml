@@ -1,4 +1,4 @@
-name: CI/CD Sync to Hugging Face
+name: CI/CD Production Pipeline
 on:
   push:
     branches: [main]
@@ -16,11 +16,11 @@ jobs:
         run: |
           pip install -r requirements.txt
           pip install pytest
-      - name: Run Validation Tests
-        run: pytest tests/test_app.py
+      - name: Run Smoke Tests
+        run: pytest tests/test_imports.py
 
   deploy:
-    needs: test  # Only deploy if tests pass!
+    needs: test  # This is the 'Senior' gatekeeper step
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

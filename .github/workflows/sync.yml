@@ -1,20 +1,11 @@
-name: Sync to Hugging Face
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          lfs: true
-      - name: Push to HF
-        env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: |
-          # This connects GitHub directly to your johnboscokibet profile
-          git push --force https://johnboscokibet:$HF_TOKEN@huggingface.co/spaces/johnboscokibet/infrastructure-mlops-pro main
+---
+title: Infrastructure MLOps
+emoji: 🏗️
+colorFrom: blue
+colorTo: green
+sdk: gradio
+sdk_version: 4.44.1
+python_version: "3.11"
+app_file: app.py
+pinned: false
+---

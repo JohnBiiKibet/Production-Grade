@@ -2,3 +2,4 @@ huggingface_hub==0.24.0
 gradio==4.44.1
 ultralytics
 opencv-python-headless
+pydantic==2.10.6

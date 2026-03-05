@@ -1,29 +1,34 @@
 import gradio as gr
 from ultralytics import YOLO
-import cv2
+import os
 
-# Senior Logic: CV Model (Loading a lightweight infra-ready model)
+# Load a lightweight model for infrastructure object detection
 model = YOLO('yolov8n.pt') 
 
-def analyze_infrastructure(image):
-    # 1. Computer Vision Detection
+def infra_analysis(image):
+    # 1. Computer Vision: Identify objects (simulating infrastructure defects)
     results = model(image)
     annotated_img = results[0].plot()
-    detections = [model.names[int(c)] for c in results[0].boxes.cls]
+    
+    # 2. RAG Logic: Simulated retrieval from maintenance manuals
+    # In a senior profile, this would query a Vector Database
+    advice = "⚠️ Maintenance Protocol: Detected anomalies require inspection within 48h per DIN-1076 standard."
+    
+    return annotated_img, advice
 
-    # 2. Simulated RAG Logic (Bridge to Mobility Manuals)
-    # In a full project, this queries a Vector DB
-    query = ", ".join(detections) if detections else "General Inspection"
-    maintenance_advice = f"Maintence Protocol for {query}: Inspect every 6 months as per DIN-1076."
-
-    return annotated_img, maintenance_advice
-
-demo = gr.Interface(
-    fn=analyze_infrastructure,
-    inputs=gr.Image(type="numpy"),
-    outputs=[gr.Image(label="CV Detection"), gr.Textbox(label="RAG Maintenance Advice")],
-    title="Infrastructure Data Science Prototype"
-)
+# Senior UI Design
+with gr.Blocks(theme=gr.themes.Soft()) as demo:
+    gr.Markdown("# 🏗️ Infrastructure MLOps Pipeline")
+    gr.Markdown("Proof of Concept: Computer Vision + RAG for Mobility & Infrastructure.")
+    
+    with gr.Row():
+        input_img = gr.Image(label="Upload Infrastructure Photo")
+        output_img = gr.Image(label="CV Object Detection")
+        
+    output_text = gr.Textbox(label="RAG Maintenance Guidance")
+    btn = gr.Button("Analyze System")
+    
+    btn.click(fn=infra_analysis, inputs=input_img, outputs=[output_img, output_text])
 
 if __name__ == "__main__":
     demo.launch()

@@ -1,22 +1,36 @@
-import gradio as gr
+import streamlit as st
 from ultralytics import YOLO
+from PIL import Image
+import numpy as np
 
-model = YOLO('yolov8n.pt') 
+# Page config for "Senior" look
+st.set_page_config(page_title="Infrastructure MLOps", layout="wide")
 
-def infra_analysis(image):
-    if image is None: return None, "Upload an image."
+st.title("🏗️ Infrastructure MLOps Pipeline")
+st.write("Proof of Concept: Computer Vision + RAG for Mobility & Infrastructure.")
+
+# Load model
+@st.cache_resource
+def load_model():
+    return YOLO('yolov8n.pt')
+
+model = load_model()
+
+# UI Layout
+col1, col2 = st.columns(2)
+
+with col1:
+    uploaded_file = st.file_uploader("Upload Infrastructure Photo", type=['jpg', 'jpeg', 'png'])
+
+if uploaded_file is not None:
+    image = Image.open(uploaded_file)
+    
+    # Process
     results = model(image)
-    return results[0].plot(), "⚠️ Maintenance Protocol: Inspection required within 48h."
-
-with gr.Blocks(theme=gr.themes.Soft()) as demo:
-    gr.Markdown("# 🏗️ Infrastructure MLOps Pipeline")
-    with gr.Row():
-        input_img = gr.Image(label="Upload Photo", type="numpy")
-        output_img = gr.Image(label="Detection")
-    output_text = gr.Textbox(label="Guidance")
-    btn = gr.Button("Analyze System", variant="primary")
-    btn.click(fn=infra_analysis, inputs=input_img, outputs=[output_img, output_text])
-
-if __name__ == "__main__":
-    # share=False is critical on Hugging Face
-    demo.launch(server_name="0.0.0.0", server_port=7860, share=False)
+    annotated_img = results[0].plot()
+    
+    with col2:
+        st.image(annotated_img, caption="CV Object Detection", use_container_width=True)
+        
+    st.subheader("RAG Maintenance Guidance")
+    st.info("⚠️ Maintenance Protocol: Detected anomalies require inspection within 48h per DIN-1076 standard.")
